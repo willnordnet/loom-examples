@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: loom-example
+  threads:
+    virtual:
+      enabled: false
+  task:
+    execution:
+      thread-name-prefix: spring-task-
+      pool:
+        core-size: 4
+server:
+  tomcat:
+    threads:
+      max: 200
