@@ -3,7 +3,7 @@ spring:
     name: loom-example
   threads:
     virtual:
-      enabled: false
+      enabled: true
   task:
     execution:
       thread-name-prefix: spring-task-
@@ -12,4 +12,4 @@ spring:
 server:
   tomcat:
     threads:
-      max: 200
+      max: 2
