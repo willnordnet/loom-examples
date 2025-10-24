@@ -21,22 +21,12 @@ public class ExampleController {
     private static final InheritableThreadLocal<String> INHERITABLE_AUTH_CONTEXT = new InheritableThreadLocal<>();
 
     @GetMapping("/thread")
-    public String thread() throws InterruptedException {
+    public void thread() throws InterruptedException {
         logger.info("{} thread {} handling i/o task", Thread.currentThread().isVirtual() ? "virtual" : "platform", Thread.currentThread().threadId());
-        Thread.sleep(2000);
-        logger.info("Done. Thread id is {}", Thread.currentThread().threadId());
-        return "Hello, Thread!";
-    }
 
-    @GetMapping("/syncThread")
-    public String syncThread() throws InterruptedException {
-        logger.info("{} thread {} handling synchronized block", Thread.currentThread().isVirtual() ? "virtual" : "platform", Thread.currentThread().threadId());
-        synchronized (this) {
-            logger.info("Sleeping in sync block on thread {}", Thread.currentThread().threadId());
-            Thread.sleep(2000);
-        }
-        logger.info("Done. Thread id is {}", Thread.currentThread().threadId());
-        return "Hello, Sync thread!";
+        Thread.sleep(2000);
+
+        logger.info("Thread {} done", Thread.currentThread().threadId());
     }
 
     @GetMapping("/prime")
@@ -50,7 +40,17 @@ public class ExampleController {
             }
         }
 
-        logger.info("Thread {} done.", Thread.currentThread().threadId());
+        logger.info("Thread {} done", Thread.currentThread().threadId());
+    }
+
+    @GetMapping("/syncThread")
+    public void syncThread() throws InterruptedException {
+        logger.info("{} thread {} handling synchronized block", Thread.currentThread().isVirtual() ? "virtual" : "platform", Thread.currentThread().threadId());
+        synchronized (this) {
+            logger.info("Sleeping in sync block on thread {}", Thread.currentThread().threadId());
+            Thread.sleep(2000);
+        }
+        logger.info("Thread {} done", Thread.currentThread().threadId());
     }
 
     @GetMapping("/threadLocal")
@@ -80,7 +80,7 @@ public class ExampleController {
     }
 
     @GetMapping("/run")
-    public String structuredTask() throws InterruptedException {
+    public void structuredTask() throws InterruptedException {
         logger.info("Running on {} thread: {}", Thread.currentThread().isVirtual() ? "virtual" : "platform", Thread.currentThread().getName());
 
         ScopedValue<String> requestScope = ScopedValue.newInstance();
@@ -98,7 +98,7 @@ public class ExampleController {
 
 
         Thread.sleep(1000);
-        return "Task done";
+        logger.info("Thread {} done", Thread.currentThread().threadId());
     }
 
     @GetMapping(value = "/hello-stream", produces = TEXT_EVENT_STREAM_VALUE)

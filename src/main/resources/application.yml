@@ -4,11 +4,11 @@ spring:
   threads:
     virtual:
       enabled: true
-  task:
-    execution:
-      thread-name-prefix: spring-task-
-      pool:
-        core-size: 4
+#  task:
+#    execution:
+#      thread-name-prefix: spring-task-
+#      pool:
+#        core-size: 4
 server:
   tomcat:
     threads:
