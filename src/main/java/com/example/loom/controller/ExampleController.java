@@ -20,8 +20,8 @@ public class ExampleController {
     private static final ThreadLocal<String> AUTH_CONTEXT = ThreadLocal.withInitial(() -> null);
     private static final InheritableThreadLocal<String> INHERITABLE_AUTH_CONTEXT = new InheritableThreadLocal<>();
 
-    @GetMapping("/thread")
-    public void thread() throws InterruptedException {
+    @GetMapping("/io")
+    public void io() throws InterruptedException {
         logger.info("{} thread {} handling i/o task", Thread.currentThread().isVirtual() ? "virtual" : "platform", Thread.currentThread().threadId());
 
         Thread.sleep(2000);
@@ -33,18 +33,34 @@ public class ExampleController {
     public void prime() {
         logger.info("{} thread {} handling prime number", Thread.currentThread().isVirtual() ? "virtual" : "platform", Thread.currentThread().threadId());
 
+        checkPrime();
+
+        logger.info("Thread {} done", Thread.currentThread().threadId());
+    }
+
+    private static void checkPrime() {
         long number = 10000008467L;
         for (long i = 2; i <= number; i++) {
             if (number % i == 0) {
                 break;
             }
         }
+    }
+
+    @GetMapping("/syncPrime")
+    public void syncPrime() {
+        logger.info("{} thread {} handling prime number", Thread.currentThread().isVirtual() ? "virtual" : "platform", Thread.currentThread().threadId());
+
+        synchronized (this) {
+            logger.info("Starting synchronized prime computation on thread {}", Thread.currentThread().threadId());
+            checkPrime();
+        }
 
         logger.info("Thread {} done", Thread.currentThread().threadId());
     }
 
-    @GetMapping("/syncThread")
-    public void syncThread() throws InterruptedException {
+    @GetMapping("/syncIo")
+    public void SyncIo() throws InterruptedException {
         logger.info("{} thread {} handling synchronized block", Thread.currentThread().isVirtual() ? "virtual" : "platform", Thread.currentThread().threadId());
         synchronized (this) {
             logger.info("Sleeping in sync block on thread {}", Thread.currentThread().threadId());
