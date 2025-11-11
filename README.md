@@ -5,6 +5,10 @@
 
 curl --parallel --parallel-immediate $(printf 'http://localhost:8080/io %.0s' {1..5})
 
+curl --parallel --parallel-immediate $(printf 'http://localhost:8080/prime %.0s' {1..20})
+
+
+
 curl --parallel --parallel-immediate --parallel-max 1000  $(printf 'http://localhost:8080/io %.0s' {1..100})
 
 curl --parallel --parallel-immediate $(printf 'http://localhost:8080/syncThread %.0s' {1..5})
