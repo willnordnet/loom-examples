@@ -20,15 +20,6 @@ public class ExampleController {
     private static final ThreadLocal<String> AUTH_CONTEXT = ThreadLocal.withInitial(() -> null);
     private static final InheritableThreadLocal<String> INHERITABLE_AUTH_CONTEXT = new InheritableThreadLocal<>();
 
-    @GetMapping("/io")
-    public void io() throws InterruptedException {
-        logger.info("{} thread {} handling i/o task", Thread.currentThread().isVirtual() ? "virtual" : "platform", Thread.currentThread().threadId());
-
-        Thread.sleep(2000);
-
-        logger.info("Thread {} done", Thread.currentThread().threadId());
-    }
-
     @GetMapping("/prime")
     public void prime() {
         logger.info("{} thread {} handling prime number", Thread.currentThread().isVirtual() ? "virtual" : "platform", Thread.currentThread().threadId());

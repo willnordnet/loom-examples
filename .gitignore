@@ -14,3 +14,5 @@ target
 **/vars/dev.tfvars
 **/terraform.tfvars
 .DS_Store
+*.jfr
+*.profileconfig.json

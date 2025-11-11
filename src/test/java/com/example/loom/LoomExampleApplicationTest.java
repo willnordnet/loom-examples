@@ -30,7 +30,7 @@ class LoomExampleApplicationTest {
     @Test
     void concurrencyTest() throws InterruptedException {
         try (var scope = StructuredTaskScope.open()) {
-            IntStream.range(0, 5).forEach(i -> scope.fork(this::httpCall));
+            IntStream.range(0, 1000).forEach(i -> scope.fork(this::httpCall));
             scope.join();
         }
     }
@@ -38,7 +38,7 @@ class LoomExampleApplicationTest {
     private void httpCall() {
         logger.info("Making HTTP call from thread {}", Thread.currentThread().threadId());
         restClient.get()
-            .uri("/syncPrime")
+            .uri("/io")
             .retrieve()
             .toBodilessEntity();
     }
