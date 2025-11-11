@@ -1,6 +1,6 @@
 # loom-examples
 
--Xms1G -Xmx1G -XX:StartFlightRecording=duration=60s,filename=recording-vt-sync.jfr
+-Xms1G -Xmx1G -XX:StartFlightRecording=duration=60s,filename=recording-vt.jfr
 
 
 curl --parallel --parallel-immediate $(printf 'http://localhost:8080/io %.0s' {1..5})
