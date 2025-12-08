@@ -3,12 +3,10 @@ package com.example.loom.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.util.UUID;
-import java.util.concurrent.StructuredTaskScope;
 
 import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
@@ -27,54 +25,6 @@ public class ExampleController {
             logger.info("Sleeping in sync block on thread {}", Thread.currentThread().threadId());
             Thread.sleep(2000);
         }
-        logger.info("Thread {} done", Thread.currentThread().threadId());
-    }
-
-    @GetMapping("/threadLocal")
-    public void threadLocal(@RequestHeader(value = "Authorization", required = false) String authHeader) throws InterruptedException {
-
-        AUTH_CONTEXT.set(authHeader);
-        INHERITABLE_AUTH_CONTEXT.set(authHeader);
-
-        logger.info("Thread local: request with auth header: {}", AUTH_CONTEXT.get() != null ? AUTH_CONTEXT.get() : "no-value");
-        logger.info("Thread local: request with auth header: {} in {}", INHERITABLE_AUTH_CONTEXT.get() != null ? INHERITABLE_AUTH_CONTEXT.get() : "no-value", INHERITABLE_AUTH_CONTEXT);
-
-        Thread child = new Thread(() -> {
-            logger.info("Child thread with auth header in thread local: {}", AUTH_CONTEXT.get() != null ? AUTH_CONTEXT.get() : "no-value");
-            logger.info("Child thread with auth header in inheritable thread local: {} in {}", INHERITABLE_AUTH_CONTEXT.get() != null ? INHERITABLE_AUTH_CONTEXT.get() : "no-value", INHERITABLE_AUTH_CONTEXT);
-        });
-
-        child.start();
-        child.join();
-    }
-
-    @GetMapping("/scopedValue")
-    public void scopedValue(@RequestHeader(value = "Authorization", required = false) String authHeader) {
-        ScopedValue<String> requestScope = ScopedValue.newInstance();
-        ScopedValue.where(requestScope, authHeader).run(() -> {
-            logger.info("Request with auth header: {}", requestScope.orElse("no-value"));
-        });
-    }
-
-    @GetMapping("/run")
-    public void structuredTask() throws InterruptedException {
-        logger.info("Running on {} thread: {}", Thread.currentThread().isVirtual() ? "virtual" : "platform", Thread.currentThread().getName());
-
-        ScopedValue<String> requestScope = ScopedValue.newInstance();
-        ScopedValue.where(requestScope, UUID.randomUUID().toString()).run(() -> {
-            logger.info("In request {}", requestScope.get());
-
-            try (var scope = StructuredTaskScope.open()) {
-                scope.fork(() -> logger.info("In structured concurrent task 1 with request {}", requestScope.get()));
-                scope.fork(() -> logger.info("In structured concurrent task 2 with request {}", requestScope.get()));
-                scope.join();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        });
-
-
-        Thread.sleep(1000);
         logger.info("Thread {} done", Thread.currentThread().threadId());
     }
 

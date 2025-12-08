@@ -1,0 +1,28 @@
+### POST login - Set name in thread-local context
+POST http://localhost:8080/login
+Content-Type: application/json
+
+John Doe
+
+
+### GET whoami - Get name from thread-local context
+GET http://localhost:8080/whoami
+
+### POST scoped login - Set name in scoped thread-local context
+POST http://localhost:8080/scoped/login
+Content-Type: application/json
+
+Jane Smith
+
+### GET scoped whoami - Get name from scoped thread-local context
+GET http://localhost:8080/scoped/whoami
+
+### GET scopedValue - Test scoped value with Authorization header
+GET http://localhost:8080/scopedValue
+Authorization: Bearer sample-token-123
+
+### GET scopedValue - Test scoped value without Authorization header
+GET http://localhost:8080/scopedValue
+
+### GET run - Test structured concurrency with scoped values
+GET http://localhost:8080/run
